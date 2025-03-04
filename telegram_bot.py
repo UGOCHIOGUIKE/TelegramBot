@@ -33,10 +33,10 @@ if firebase_credentials_json:
         initialize_app(cred)
         print("✅ Firebase Initialized Successfully!")
     except json.JSONDecodeError as e:
-        print("❌ Firebase JSON Error:", str(e))
-        raise Exception("Invalid JSON format in environment variables.")
+        print(f"❌ Firebase JSON Error: {e}")
+        raise Exception("Invalid JSON format in environment variables. Please check your Render environment variable.")
 else:
-    raise Exception("❌ Firebase credentials not found. Check environment variables.")
+    raise Exception("❌ Firebase credentials not found. Set the FIREBASE_CREDENTIALS environment variable in Render.")
     
 
 # Global Error Handler Function
