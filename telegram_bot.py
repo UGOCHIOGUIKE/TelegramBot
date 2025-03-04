@@ -1,5 +1,5 @@
 import firebase_admin
-from firebase_admin import credentials, db
+from firebase_admin import credentials, db, initialize_app
 import requests
 import telebot
 from telebot import TeleBot, types
@@ -24,29 +24,14 @@ import os
 from dotenv import load_dotenv
 
 
-# Load environment variables
-load_dotenv()
+firebase_credentials_json = os.getenv("FIREBASE_CREDENTIALS")
 
-# Get Telegram bot token
-TELEGRAM_BOT_TOKEN = os.getenv("BOT_TOKEN")
-
-# Check if BOT_TOKEN is set
-if not TELEGRAM_BOT_TOKEN:
-    raise ValueError("Error: BOT_TOKEN environment variable is missing!")
-
-# Initialize Telegram Bot
-bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
-
-# Get Firebase credentials path
-firebase_credentials_path = os.getenv("FIREBASE_CREDENTIALS")
-
-# Check if FIREBASE_CREDENTIALS is set
-if not firebase_credentials_path:
-    raise ValueError("Error: FIREBASE_CREDENTIALS environment variable is missing!")
-
-# Initialize Firebase
-cred = credentials.Certificate(firebase_credentials_path)
-firebase_admin.initialize_app(cred)
+if firebase_credentials_json:
+    firebase_credentials_dict = json.loads(firebase_credentials_json)
+    cred = credentials.Certificate(firebase_credentials_dict)
+    initialize_app(cred)
+else:
+    raise Exception("Firebase credentials not found. Please check environment variables.")
 
 
 # Global Error Handler Function
