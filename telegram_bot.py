@@ -27,12 +27,17 @@ from dotenv import load_dotenv
 firebase_credentials_json = os.getenv("FIREBASE_CREDENTIALS")
 
 if firebase_credentials_json:
-    firebase_credentials_dict = json.loads(firebase_credentials_json)
-    cred = credentials.Certificate(firebase_credentials_dict)
-    initialize_app(cred)
+    try:
+        firebase_credentials_dict = json.loads(firebase_credentials_json)
+        cred = credentials.Certificate(firebase_credentials_dict)
+        initialize_app(cred)
+        print("✅ Firebase Initialized Successfully!")
+    except json.JSONDecodeError as e:
+        print("❌ Firebase JSON Error:", str(e))
+        raise Exception("Invalid JSON format in environment variables.")
 else:
-    raise Exception("Firebase credentials not found. Please check environment variables.")
-
+    raise Exception("❌ Firebase credentials not found. Check environment variables.")
+    
 
 # Global Error Handler Function
 import logging
